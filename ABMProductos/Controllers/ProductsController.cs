@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ABMProductos.Controllers;
 
 [ApiController]
-[Route("api/[products]")]
+[Route("api/[controller]")]
 
 public class ProductsController : ControllerBase
 {
@@ -33,9 +33,15 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public IActionResult Create(ProductForCreateDto productForCreateDto)
     {
-        ProductForReadDto? productDto = _productService.CreateProduct(productForCreateDto);
-
-        return Ok(productDto);
+        try
+        {
+            ProductForReadDto productDto = _productService.CreateProduct(productForCreateDto);
+            return Ok(productDto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [HttpPut("{id:int}")]

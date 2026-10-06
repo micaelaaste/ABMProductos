@@ -5,8 +5,9 @@ namespace ABMProductos.Models.DTOs.Requests;
 public class ProductForCreateDto
 {
     [Required(ErrorMessage = "El nombre es obligatorio.")]
-    [Range(3, 100)]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres.")]
     public string Name { get; set; } = string.Empty;
+
     [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor que cero.")]
     public decimal Price { get; set; }
 }

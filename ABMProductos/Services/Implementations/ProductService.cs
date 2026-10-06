@@ -3,6 +3,7 @@
 using ABMProductos.Models.DTOs.Requests;
 using ABMProductos.Models.DTOs.Responses;
 using ABMProductos.Repositories.Implementations;
+using ABMProductos.Repositories.Interfaces;
 using ABMProductos.Services.Interfaces;
 public class ProductService : IProductService
 {
@@ -43,6 +44,11 @@ public class ProductService : IProductService
 
     public ProductForReadDto CreateProduct(ProductForCreateDto dto)
     {
+        bool nameExists = productRepository.GetAllProducts()
+        .Any(p => p.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase));
+
+        if (nameExists)
+            throw new InvalidOperationException($"Ya existe un producto con el nombre '{dto.Name}'.");
         var id = productRepository.GetAllProducts().Max(p => p.Id) + 1;
         Product? product = new Product()
         {
